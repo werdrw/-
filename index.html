@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام المعلومات الصحية | HIS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary:       #0D4E6E;
+            --primary-light: #1A6B8A;
+            --teal:          #0D9488;
+            --teal-light:    #CCFBF1;
+            --teal-pale:     #F0FDFA;
+            --yellow:        #F59E0B;
+            --yellow-light:  #FFFBEB;
+            --yellow-pale:   #FEF9C3;
+            --green:         #059669;
+            --green-light:   #D1FAE5;
+            --red:           #DC2626;
+            --red-light:     #FEE2E2;
+            --purple:        #7C3AED;
+            --purple-light:  #F5F3FF;
+            --gray-50:       #F8FAFC;
+            --gray-100:      #F1F5F9;
+            --gray-200:      #E2E8F0;
+            --gray-300:      #CBD5E1;
+            --gray-400:      #94A3B8;
+            --gray-500:      #64748B;
+            --gray-600:      #475569;
+            --gray-800:      #1E293B;
+            --white:         #FFFFFF;
+            --shadow-sm:     0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md:     0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Tajawal', 'Segoe UI', sans-serif;
+            background: var(--gray-100);
+            color: var(--gray-800);
+            direction: rtl;
+            min-height: 100vh;
+        }
+
+        /* ─── HEADER ─── */
+        .header {
+            position: fixed;
+            top: 0; right: 0; left: 0;
+            height: 60px;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            padding: 0 18px;
+            z-index: 300;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.28);
+            gap: 0;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-left: 18px;
+            border-left: 1px solid rgba(255,255,255,0.18);
+        }
+
+        .brand-badge {
+            width: 36px; height: 36px;
+            background: var(--teal);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 900; font-size: 11px; color: white;
+            letter-spacing: -0.5px; flex-shrink: 0;
+        }
+
+        .brand-text .name  { font-size: 15px; font-weight: 700; color: white; line-height: 1.2; }
+        .brand-text .sub   { font-size: 10px; color: rgba(255,255,255,0.65); }
+
+        .header-patient {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 16px;
+            flex-wrap: wrap;
+        }
+
+        .hchip {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.18);
+            color: white;
+            padding: 4px 11px;
+            border-radius: 14px;
+            font-size: 12px;
+            display: flex; align-items: center; gap: 5px;
+        }
+        .hchip .lbl { opacity: 0.68; }
+        .hchip .val { font-weight: 600; }
+
+        .status-badge {
+            background: rgba(16,185,129,0.18);
+            border: 1px solid rgba(16,185,129,0.35);
+            color: #6EE7B7;
+            padding: 4px 11px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* ─── LAYOUT ─── */
+        .layout { display: flex; margin-top: 60px; }
+
+        /* ─── SIDEBAR ─── */
+        .sidebar {
+            width: 218px;
+            background: var(--white);
+            position: fixed;
+            top: 60px; right: 0; bottom: 0;
+            overflow-y: auto;
+            border-left: 1px solid var(--gray-200);
+            padding: 10px 0 24px;
+            z-index: 200;
+        }
+
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 2px; }
+
+        .sb-title {
+            font-size: 10px; font-weight: 700;
+            color: var(--gray-400);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 10px 16px 5px;
+        }
+
+        .nav-btn {
+            width: 100%;
+            display: flex; align-items: center; gap: 8px;
+            padding: 8px 16px;
+            background: none; border: none;
+            border-right: 3px solid transparent;
+            cursor: pointer;
+            text-align: right;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 13px; color: var(--gray-500);
+            transition: all 0.15s;
+        }
+
+        .nav-btn:hover  { background: var(--gray-50); color: var(--primary); }
+        .nav-btn.active { background: #EFF8FD; color: var(--primary); border-right-color: var(--primary); font-weight: 600; }
+
+        .nav-btn.sp:hover, .nav-btn.sp.active {
+            background: #FFFBEB; color: #92400E; border-right-color: var(--yellow);
+        }
+        .nav-btn.cm:hover, .nav-btn.cm.active {
+            background: var(--purple-light); color: var(--purple); border-right-color: var(--purple);
+        }
+
+        .ndot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+        /* ─── MAIN ─── */
+        .main {
+            margin-right: 218px;
+            flex: 1;
+            padding: 18px 20px;
+            max-width: calc(100% - 218px);
+        }
+
+        .page-heading {
+            font-size: 12px;
+            color: var(--gray-400);
+            margin-bottom: 14px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .page-heading strong { font-size: 20px; color: var(--primary); font-weight: 700; }
+
+        /* ─── PATIENT INFO BAR ─── */
+        .pt-bar {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin-bottom: 14px;
+            display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+            scroll-margin-top: 76px;
+        }
+
+        .pt-field { display: flex; flex-direction: column; gap: 3px; }
+        .pt-field label { font-size: 10px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; }
+        .pt-field input, .pt-field select {
+            border: 1.5px solid var(--gray-200);
+            border-radius: 6px;
+            padding: 5px 9px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 13px;
+            color: var(--gray-800);
+            direction: rtl;
+            background: var(--gray-50);
+            transition: border-color 0.2s;
+        }
+        .pt-field input:focus, .pt-field select:focus {
+            outline: none; border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(13,148,136,0.08);
+            background: white;
+        }
+        .pt-sep { width: 1px; height: 36px; background: var(--gray-200); }
+
+        /* ─── CARD ─── */
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+            overflow: hidden;
+            scroll-margin-top: 76px;
+        }
+
+        .card-head {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--gray-200);
+            background: var(--gray-50);
+        }
+
+        .cicon {
+            width: 30px; height: 30px;
+            border-radius: 7px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 800; color: white; flex-shrink: 0;
+        }
+
+        .ctitle h3 { font-size: 14px; font-weight: 700; color: var(--primary); }
+        .ctitle p  { font-size: 10.5px; color: var(--gray-400); margin-top: 1px; }
+
+        .card-body { padding: 14px 16px; }
+
+        /* ─── TAGS ─── */
+        .tgrp { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+
+        .tag {
+            padding: 4px 11px;
+            border-radius: 13px;
+            font-size: 12px; font-weight: 500;
+            cursor: pointer;
+            border: 1.5px solid;
+            transition: all 0.13s;
+            user-select: none;
+        }
+
+        .t-teal   { border-color: var(--teal);    color: var(--teal);    background: var(--teal-pale); }
+        .t-teal:hover,   .t-teal.on   { background: var(--teal);    color: white; }
+
+        .t-orange { border-color: #EA580C; color: #EA580C; background: #FFF7ED; }
+        .t-orange:hover, .t-orange.on { background: #EA580C; color: white; }
+
+        .t-red    { border-color: var(--red);     color: var(--red);     background: var(--red-light); }
+        .t-red:hover,    .t-red.on    { background: var(--red);     color: white; }
+
+        .t-blue   { border-color: #2563EB; color: #2563EB; background: #EFF6FF; }
+        .t-blue:hover,   .t-blue.on   { background: #2563EB; color: white; }
+
+        .t-navy   { border-color: var(--primary); color: var(--primary); background: #F0F7FF; }
+        .t-navy:hover,   .t-navy.on   { background: var(--primary); color: white; }
+
+        .t-purple { border-color: var(--purple);  color: var(--purple);  background: var(--purple-light); }
+        .t-purple:hover, .t-purple.on { background: var(--purple);  color: white; }
+
+        .t-pink   { border-color: #BE185D; color: #BE185D; background: #FDF2F8; }
+        .t-pink:hover,   .t-pink.on   { background: #BE185D; color: white; }
+
+        /* ─── NOTES TEXTAREA ─── */
+        .notes {
+            width: 100%;
+            padding: 8px 11px;
+            border: 1.5px solid var(--gray-200);
+            border-radius: 7px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 13px; color: var(--gray-800);
+            resize: vertical; min-height: 68px;
+            transition: border-color 0.2s;
+            direction: rtl; line-height: 1.65;
+            background: var(--gray-50);
+        }
+        .notes:focus {
+            outline: none; border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(13,148,136,0.08);
+            background: white;
+        }
+        .notes::placeholder { color: #B0BEC5; font-size: 12px; }
+
+        .flabel {
+            display: block;
+            font-size: 11.5px; font-weight: 600;
+            color: var(--gray-600);
+            margin-bottom: 5px;
+        }
+
+        .sep { height: 1px; background: var(--gray-200); margin: 10px 0; }
+
+        .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        /* ─── INTERACTION CARD ─── */
+        .card-interact {
+            background: var(--white);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            border: 1.5px solid #FCD34D;
+            scroll-margin-top: 76px;
+        }
+
+        .card-interact .card-head {
+            background: linear-gradient(135deg, #78350F 0%, #B45309 100%);
+            border-bottom: none;
+        }
+        .card-interact .card-head .ctitle h3 { color: white; }
+        .card-interact .card-head .ctitle p  { color: rgba(255,255,255,0.72); }
+
+        .dinput-row { display: flex; gap: 9px; margin-bottom: 12px; }
+
+        .dinput {
+            flex: 1;
+            padding: 9px 13px;
+            border: 1.5px solid var(--gray-200);
+            border-radius: 7px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 14px; direction: rtl;
+            background: var(--gray-50);
+            transition: border-color 0.2s;
+        }
+        .dinput:focus {
+            outline: none; border-color: var(--yellow);
+            box-shadow: 0 0 0 3px rgba(245,158,11,0.1);
+            background: white;
+        }
+        .dinput::placeholder { color: #B0BEC5; font-size: 13px; }
+
+        .btn {
+            display: inline-flex; align-items: center; gap: 7px;
+            padding: 9px 20px;
+            border-radius: 7px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 13.5px; font-weight: 600;
+            cursor: pointer; border: none;
+            transition: all 0.18s;
+        }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+        .btn-y { background: #D97706; color: white; }
+        .btn-y:hover:not(:disabled) { background: #B45309; transform: translateY(-1px); }
+
+        .btn-p { background: var(--purple); color: white; }
+        .btn-p:hover:not(:disabled) { background: #6D28D9; transform: translateY(-1px); }
+
+        /* ─── ALERT BOX ─── */
+        .alert { border-radius: 8px; padding: 12px 14px; display: none; }
+        .alert.show { display: block; }
+
+        .alert.conflict {
+            background: var(--yellow-pale);
+            border: 2px solid #EAB308;
+        }
+        .alert.safe {
+            background: var(--green-light);
+            border: 2px solid #6EE7B7;
+        }
+
+        .alert-ttl {
+            font-size: 13px; font-weight: 700;
+            display: flex; align-items: center; gap: 6px;
+            margin-bottom: 6px;
+        }
+        .alert-ttl.c { color: var(--red); }
+        .alert-ttl.s { color: var(--green); }
+
+        .alert-body { font-size: 13px; line-height: 1.75; }
+        .alert-body.c { color: #92400E; }
+        .alert-body.s { color: #065F46; }
+
+        /* ─── COMM CARD ─── */
+        .card-comm {
+            background: var(--white);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            border: 1.5px solid #DDD6FE;
+            scroll-margin-top: 76px;
+        }
+
+        .card-comm .card-head {
+            background: linear-gradient(135deg, #3B0764 0%, #7C3AED 100%);
+            border-bottom: none;
+        }
+        .card-comm .card-head .ctitle h3 { color: white; }
+        .card-comm .card-head .ctitle p  { color: rgba(255,255,255,0.72); }
+
+        .comm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        .comm-out {
+            background: var(--purple-light);
+            border: 1.5px solid #DDD6FE;
+            border-radius: 7px;
+            padding: 11px 13px;
+            min-height: 110px;
+            font-size: 13px; line-height: 1.8; color: #3B0764;
+        }
+        .comm-out .ph { color: var(--gray-300); font-size: 12px; }
+
+        /* ─── SPINNER ─── */
+        .spin {
+            display: inline-block;
+            width: 15px; height: 15px;
+            border: 2px solid rgba(255,255,255,0.4);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: rot 0.7s linear infinite;
+        }
+        @keyframes rot { to { transform: rotate(360deg); } }
+
+        /* ─── ICON COLORS ─── */
+        .ic-teal   { background: #0D9488; }
+        .ic-orange { background: #EA580C; }
+        .ic-red    { background: #DC2626; }
+        .ic-blue   { background: #2563EB; }
+        .ic-navy   { background: #1E3A8A; }
+        .ic-green  { background: #16A34A; }
+        .ic-purple { background: #7C3AED; }
+        .ic-gray   { background: #475569; }
+        .ic-yel    { background: #D97706; }
+        .ic-pink   { background: #BE185D; }
+
+        /* ─── SCROLLBAR ─── */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--gray-100); }
+        ::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 3px; }
+
+        @media (max-width: 860px) {
+            .sidebar { display: none; }
+            .main { margin-right: 0; max-width: 100%; }
+            .g2 { grid-template-columns: 1fr; }
+            .comm-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<header class="header">
+    <div class="header-brand">
+        <div class="brand-badge">HIS</div>
+        <div class="brand-text">
+            <div class="name">نظام المعلومات الصحية</div>
+            <div class="sub">Hospital Information System</div>
+        </div>
+    </div>
+    <div class="header-patient">
+        <div class="hchip">
+            <span class="lbl">المريض</span>
+            <span class="val" id="hdr-name">—</span>
+        </div>
+        <div class="hchip">
+            <span class="lbl">MRN</span>
+            <span class="val" id="hdr-mrn">—</span>
+        </div>
+        <div class="hchip">
+            <span class="lbl">العمر</span>
+            <span class="val" id="hdr-age">—</span>
+        </div>
+        <div class="hchip">
+            <span class="lbl">الوزن</span>
+            <span class="val" id="hdr-wt">—</span>
+        </div>
+    </div>
+    <div class="status-badge">نشط</div>
+</header>
+
+<!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+<nav class="sidebar">
+    <div class="sb-title">بيانات المريض</div>
+    <button class="nav-btn" onclick="go('pt-info',this)">
+        <span class="ndot" style="background:#0D9488"></span>البيانات الأساسية
+    </button>
+
+    <div class="sb-title">التاريخ المرضي</div>
+    <button class="nav-btn" onclick="go('chronic',this)">
+        <span class="ndot" style="background:#EA580C"></span>الأمراض المزمنة
+    </button>
+    <button class="nav-btn" onclick="go('surgeries',this)">
+        <span class="ndot" style="background:#DC2626"></span>العمليات الجراحية
+    </button>
+    <button class="nav-btn" onclick="go('allergies',this)">
+        <span class="ndot" style="background:#BE185D"></span>الحساسيات
+    </button>
+    <button class="nav-btn" onclick="go('curr-meds',this)">
+        <span class="ndot" style="background:#2563EB"></span>الأدوية الحالية
+    </button>
+    <button class="nav-btn" onclick="go('med-hist',this)">
+        <span class="ndot" style="background:#1E3A8A"></span>التاريخ الدوائي
+    </button>
+    <button class="nav-btn" onclick="go('visits',this)">
+        <span class="ndot" style="background:#16A34A"></span>الزيارات والتشخيصات
+    </button>
+    <button class="nav-btn" onclick="go('labs',this)">
+        <span class="ndot" style="background:#0D9488"></span>نتائج التحاليل
+    </button>
+    <button class="nav-btn" onclick="go('family',this)">
+        <span class="ndot" style="background:#475569"></span>التاريخ العائلي
+    </button>
+    <button class="nav-btn" onclick="go('recent',this)">
+        <span class="ndot" style="background:#D97706"></span>التاريخ الحديث
+    </button>
+    <button class="nav-btn" onclick="go('vaccines',this)">
+        <span class="ndot" style="background:#7C3AED"></span>التطعيمات
+    </button>
+
+    <div class="sb-title">الأدوات الذكية</div>
+    <button class="nav-btn sp" onclick="go('interaction',this)">
+        <span class="ndot" style="background:#F59E0B"></span>فحص التعارض الدوائي
+    </button>
+    <button class="nav-btn cm" onclick="go('communication',this)">
+        <span class="ndot" style="background:#7C3AED"></span>نظام التواصل
+    </button>
+</nav>
+
+<!-- ═══════════════════ MAIN ═══════════════════ -->
+<main class="main">
+
+    <div class="page-heading">
+        <strong>ملف المريض الطبي</strong>
+        <span>Medical Patient Record</span>
+    </div>
+
+    <!-- ── PATIENT INFO ── -->
+    <div id="pt-info" class="pt-bar">
+        <div class="pt-field">
+            <label>اسم المريض</label>
+            <input type="text" id="pt-name" placeholder="الاسم الكامل" oninput="syncHeader()" style="width:155px">
+        </div>
+        <div class="pt-sep"></div>
+        <div class="pt-field">
+            <label>رقم السجل MRN</label>
+            <input type="text" id="pt-mrn" placeholder="رقم السجل" oninput="syncHeader()" style="width:100px">
+        </div>
+        <div class="pt-sep"></div>
+        <div class="pt-field">
+            <label>العمر (سنة)</label>
+            <input type="number" id="pt-age" placeholder="العمر" min="0" max="150" oninput="syncHeader()" style="width:80px">
+        </div>
+        <div class="pt-sep"></div>
+        <div class="pt-field">
+            <label>الوزن (كغ)</label>
+            <input type="number" id="pt-wt" placeholder="الوزن" min="0" max="300" oninput="syncHeader()" style="width:80px">
+        </div>
+        <div class="pt-sep"></div>
+        <div class="pt-field">
+            <label>الطول (سم)</label>
+            <input type="number" id="pt-ht" placeholder="الطول" min="0" max="250" style="width:80px">
+        </div>
+        <div class="pt-sep"></div>
+        <div class="pt-field">
+            <label>فصيلة الدم</label>
+            <select id="pt-blood" style="width:85px">
+                <option value="">—</option>
+                <option>A+</option><option>A-</option>
+                <option>B+</option><option>B-</option>
+                <option>AB+</option><option>AB-</option>
+                <option>O+</option><option>O-</option>
+            </select>
+        </div>
+        <div class="pt-sep"></div>
+        <div class="pt-field">
+            <label>الجنس</label>
+            <select id="pt-gender" style="width:85px">
+                <option value="">—</option>
+                <option>ذكر</option>
+                <option>أنثى</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- ── 01 CHRONIC ── -->
+    <div id="chronic" class="card">
+        <div class="card-head">
+            <div class="cicon ic-orange">01</div>
+            <div class="ctitle">
+                <h3>الأمراض المزمنة والسابقة</h3>
+                <p>Chronic &amp; Previous Conditions</p>
+            </div>
+        </div>
+        <div class="card-body">
+            <label class="flabel">انقر لتحديد الأمراض</label>
+            <div class="tgrp" id="tg-chronic">
+                <span class="tag t-orange" onclick="toggle(this,'chronic')">السكري — Diabetes</span>
+                <span class="tag t-orange" onclick="toggle(this,'chronic')">ارتفاع ضغط الدم — Hypertension</span>
+                <span class="tag t-orange" onclick="toggle(this,'chronic')">الربو — Asthma</span>
+                <span class="tag t-orange" onclick="toggle(this,'chronic')">أمراض القلب — Heart Disease</span>
+                <span class="tag t-orange" onclick="toggle(this,'chronic')">الفشل الكلوي — Kidney Failure</span>
+                <span class="tag t-orange" onclick="toggle(this,'chronic')">الفشل الكبدي — Liver Failure</span>
+                <span class="tag t-orange" onclick="toggle(this,'chronic')">السرطان — Cancer</span>
+                <span class="tag t-orange" onclick="toggle(this,'chronic')">الغدة الدرقية — Thyroid Disease</span>
+                <span class="tag t-orange" onclick="toggle(this,'chronic')">هشاشة العظام — Osteoporosis</span>
+                <span class="tag t-orange" onclick="toggle(this,'chronic')">الصرع — Epilepsy</span>
+                <span class="tag t-orange" onclick="toggle(this,'chronic')">الزهايمر — Alzheimer's</span>
+                <span class="tag t-orange" onclick="toggle(this,'chronic')">الاكتئاب — Depression</span>
+                <span class="tag t-orange" onclick="toggle(this,'chronic')">الذبحة الصدرية — Angina</span>
+                <span class="tag t-orange" onclick="toggle(this,'chronic')">السمنة — Obesity</span>
+            </div>
+            <label class="flabel">ملاحظات إضافية</label>
+            <textarea class="notes" id="n-chronic" placeholder="اكتب أي تفاصيل إضافية عن الأمراض المزمنة، التواريخ، درجة الخطورة..."></textarea>
+        </div>
+    </div>
+
+    <!-- ── 02 SURGERIES ── -->
+    <div id="surgeries" class="card">
+        <div class="card-head">
+            <div class="cicon ic-red">02</div>
+            <div class="ctitle">
+                <h3>العمليات الجراحية السابقة</h3>
+                <p>Previous Surgeries</p>
+            </div>
+        </div>
+        <div class="card-body">
+            <label class="flabel">اختر من القائمة</label>
+            <div class="tgrp">
+                <span class="tag t-red" onclick="toggle(this,'surg')">زائدة دودية — Appendectomy</span>
+                <span class="tag t-red" onclick="toggle(this,'surg')">مرارة — Cholecystectomy</span>
+                <span class="tag t-red" onclick="toggle(this,'surg')">قسطرة قلبية — Cardiac Cath</span>
+                <span class="tag t-red" onclick="toggle(this,'surg')">تحويل مسار — Bypass Surgery</span>
+                <span class="tag t-red" onclick="toggle(this,'surg')">عملية الركبة — Knee Surgery</span>
+                <span class="tag t-red" onclick="toggle(this,'surg')">عملية الظهر — Back Surgery</span>
+                <span class="tag t-red" onclick="toggle(this,'surg')">ولادة قيصرية — C-Section</span>
+                <span class="tag t-red" onclick="toggle(this,'surg')">استئصال لوز — Tonsillectomy</span>
+                <span class="tag t-red" onclick="toggle(this,'surg')">عملية كلية — Kidney Surgery</span>
+                <span class="tag t-red" onclick="toggle(this,'surg')">زرع أعضاء — Transplant</span>
+                <span class="tag t-red" onclick="toggle(this,'surg')">بتر — Amputation</span>
+            </div>
+            <label class="flabel">التفاصيل والتواريخ والمضاعفات</label>
+            <textarea class="notes" id="n-surg" placeholder="اذكر اسم العملية، تاريخها، المستشفى، والمضاعفات إن وجدت..."></textarea>
+        </div>
+    </div>
+
+    <!-- ── 03 ALLERGIES ── -->
+    <div id="allergies" class="card">
+        <div class="card-head">
+            <div class="cicon ic-pink">03</div>
+            <div class="ctitle">
+                <h3>الحساسيات</h3>
+                <p>Allergies — Drug / Food / Environmental</p>
+            </div>
+        </div>
+        <div class="card-body">
+            <label class="flabel">حساسية أدوية — Drug Allergies</label>
+            <div class="tgrp" id="tg-allergy">
+                <span class="tag t-pink" onclick="toggle(this,'allergy')">البنسلين — Penicillin</span>
+                <span class="tag t-pink" onclick="toggle(this,'allergy')">السيفالوسبورين — Cephalosporin</span>
+                <span class="tag t-pink" onclick="toggle(this,'allergy')">السلفا — Sulfonamides</span>
+                <span class="tag t-pink" onclick="toggle(this,'allergy')">الأسبرين — Aspirin</span>
+                <span class="tag t-pink" onclick="toggle(this,'allergy')">الإيبوبروفين — Ibuprofen</span>
+                <span class="tag t-pink" onclick="toggle(this,'allergy')">الكوداين — Codeine</span>
+                <span class="tag t-pink" onclick="toggle(this,'allergy')">المورفين — Morphine</span>
+                <span class="tag t-pink" onclick="toggle(this,'allergy')">وارفارين — Warfarin</span>
+                <span class="tag t-pink" onclick="toggle(this,'allergy')">الميثوتريكسات — Methotrexate</span>
+            </div>
+            <label class="flabel" style="margin-top:8px">حساسية أخرى — Other Allergies</label>
+            <div class="tgrp">
+                <span class="tag t-pink" onclick="toggle(this,'allergy')">المكسرات — Nuts</span>
+                <span class="tag t-pink" onclick="toggle(this,'allergy')">الغلوتين — Gluten</span>
+                <span class="tag t-pink" onclick="toggle(this,'allergy')">اللاتكس — Latex</span>
+                <span class="tag t-pink" onclick="toggle(this,'allergy')">الغبار — Dust</span>
+                <span class="tag t-pink" onclick="toggle(this,'allergy')">حبوب اللقاح — Pollen</span>
+                <span class="tag t-pink" onclick="toggle(this,'allergy')">حليب البقر — Cow Milk</span>
+                <span class="tag t-pink" onclick="toggle(this,'allergy')">المأكولات البحرية — Seafood</span>
+            </div>
+            <label class="flabel">وصف ردود الفعل التحسسية</label>
+            <textarea class="notes" id="n-allergy" placeholder="نوع الحساسية، درجة الخطورة، وصف رد الفعل (طفح، انتفاخ، صعوبة تنفس...)"></textarea>
+        </div>
+    </div>
+
+    <!-- ── 04 CURRENT MEDS ── -->
+    <div id="curr-meds" class="card">
+        <div class="card-head">
+            <div class="cicon ic-blue">04</div>
+            <div class="ctitle">
+                <h3>الأدوية الحالية</h3>
+                <p>Current Medications</p>
+            </div>
+        </div>
+        <div class="card-body">
+            <label class="flabel">اختر الأدوية الشائعة</label>
+            <div class="tgrp" id="tg-meds">
+                <span class="tag t-blue" onclick="toggle(this,'meds')">Metformin ميتفورمين</span>
+                <span class="tag t-blue" onclick="toggle(this,'meds')">Insulin إنسولين</span>
+                <span class="tag t-blue" onclick="toggle(this,'meds')">Amlodipine أملوديبين</span>
+                <span class="tag t-blue" onclick="toggle(this,'meds')">Lisinopril ليزينوبريل</span>
+                <span class="tag t-blue" onclick="toggle(this,'meds')">Atorvastatin أتورفاستاتين</span>
+                <span class="tag t-blue" onclick="toggle(this,'meds')">Warfarin وارفارين</span>
+                <span class="tag t-blue" onclick="toggle(this,'meds')">Aspirin أسبرين</span>
+                <span class="tag t-blue" onclick="toggle(this,'meds')">Omeprazole أوميبرازول</span>
+                <span class="tag t-blue" onclick="toggle(this,'meds')">Levothyroxine ليفوثيروكسين</span>
+                <span class="tag t-blue" onclick="toggle(this,'meds')">Salbutamol سالبوتامول</span>
+                <span class="tag t-blue" onclick="toggle(this,'meds')">Clopidogrel كلوبيدوقريل</span>
+                <span class="tag t-blue" onclick="toggle(this,'meds')">Ramipril راميبريل</span>
+                <span class="tag t-blue" onclick="toggle(this,'meds')">Furosemide فيوروسيمايد</span>
+                <span class="tag t-blue" onclick="toggle(this,'meds')">Spironolactone سبيرونولاكتون</span>
+                <span class="tag t-blue" onclick="toggle(this,'meds')">Prednisolone بريدنيزولون</span>
+            </div>
+            <label class="flabel">قائمة الأدوية الكاملة (الاسم، الجرعة، التكرار، السبب)</label>
+            <textarea class="notes" id="n-meds" placeholder="مثال:&#10;Metformin 500mg — مرتين يومياً — لعلاج السكري&#10;Amlodipine 5mg — مرة صباحاً — لضغط الدم&#10;Warfarin 5mg — مرة مساءً — مضاد تخثر"></textarea>
+        </div>
+    </div>
+
+    <!-- ── 05 MED HISTORY ── -->
+    <div id="med-hist" class="card">
+        <div class="card-head">
+            <div class="cicon ic-navy">05</div>
+            <div class="ctitle">
+                <h3>التاريخ الدوائي</h3>
+                <p>Medication History</p>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="g2">
+                <div>
+                    <label class="flabel">أدوية سببت مشاكل سابقاً</label>
+                    <textarea class="notes" id="n-mh-prob" placeholder="اسم الدواء والمشكلة التي سببها..." style="min-height:80px"></textarea>
+                </div>
+                <div>
+                    <label class="flabel">أدوية لم تُجدِ نفعاً</label>
+                    <textarea class="notes" id="n-mh-ineff" placeholder="أدوية جُربت ولم تحقق النتيجة المطلوبة..." style="min-height:80px"></textarea>
+                </div>
+            </div>
+            <div class="sep"></div>
+            <label class="flabel">ملاحظات الطبيب عن التاريخ الدوائي</label>
+            <textarea class="notes" id="n-mh" placeholder="أي معلومات مهمة عن الأدوية السابقة، التفاعلات المسجلة، التغييرات في العلاج..."></textarea>
+        </div>
+    </div>
+
+    <!-- ── 06 VISITS ── -->
+    <div id="visits" class="card">
+        <div class="card-head">
+            <div class="cicon ic-green">06</div>
+            <div class="ctitle">
+                <h3>الزيارات والتشخيصات السابقة</h3>
+                <p>Previous Visits &amp; Diagnoses</p>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="g2">
+                <div>
+                    <label class="flabel">الشكاوى الرئيسية السابقة</label>
+                    <textarea class="notes" id="n-complaints" placeholder="ما كان يشتكي منه المريض في الزيارات السابقة..." style="min-height:80px"></textarea>
+                </div>
+                <div>
+                    <label class="flabel">التشخيصات المسجلة</label>
+                    <textarea class="notes" id="n-diag" placeholder="التشخيصات التي أُعطيت للمريض سابقاً مع التواريخ..." style="min-height:80px"></textarea>
+                </div>
+            </div>
+            <label class="flabel">ملاحظات الطبيب عن الزيارات</label>
+            <textarea class="notes" id="n-visits" placeholder="أي معلومات مهمة من الزيارات السابقة..."></textarea>
+        </div>
+    </div>
+
+    <!-- ── 07 LAB RESULTS ── -->
+    <div id="labs" class="card">
+        <div class="card-head">
+            <div class="cicon ic-teal">07</div>
+            <div class="ctitle">
+                <h3>نتائج التحاليل والفحوصات</h3>
+                <p>Lab Results &amp; Investigations</p>
+            </div>
+        </div>
+        <div class="card-body">
+            <label class="flabel">الفحوصات المُجراة</label>
+            <div class="tgrp">
+                <span class="tag t-teal" onclick="toggle(this,'labs')">HbA1c سكر تراكمي</span>
+                <span class="tag t-teal" onclick="toggle(this,'labs')">CBC تحليل دم كامل</span>
+                <span class="tag t-teal" onclick="toggle(this,'labs')">BMP وظائف الكلى</span>
+                <span class="tag t-teal" onclick="toggle(this,'labs')">LFT وظائف الكبد</span>
+                <span class="tag t-teal" onclick="toggle(this,'labs')">Lipid Profile دهون</span>
+                <span class="tag t-teal" onclick="toggle(this,'labs')">TSH الغدة الدرقية</span>
+                <span class="tag t-teal" onclick="toggle(this,'labs')">INR مخفف الدم</span>
+                <span class="tag t-teal" onclick="toggle(this,'labs')">CXR أشعة صدر</span>
+                <span class="tag t-teal" onclick="toggle(this,'labs')">ECG تخطيط قلب</span>
+                <span class="tag t-teal" onclick="toggle(this,'labs')">Echo إيكو قلب</span>
+                <span class="tag t-teal" onclick="toggle(this,'labs')">Ultrasound سونار</span>
+                <span class="tag t-teal" onclick="toggle(this,'labs')">CT سكان</span>
+                <span class="tag t-teal" onclick="toggle(this,'labs')">MRI رنين مغناطيسي</span>
+                <span class="tag t-teal" onclick="toggle(this,'labs')">Urine Analysis تحليل بول</span>
+            </div>
+            <label class="flabel">النتائج والقيم</label>
+            <textarea class="notes" id="n-labs" placeholder="مثال:&#10;HbA1c = 8.2% (مرتفع، طبيعي أقل من 6.5%)&#10;Creatinine = 1.4 mg/dl (مرتفع قليلاً)&#10;BP = 148/92 mmHg&#10;ECG: Sinus Tachycardia"></textarea>
+        </div>
+    </div>
+
+    <!-- ── 08 FAMILY HISTORY ── -->
+    <div id="family" class="card">
+        <div class="card-head">
+            <div class="cicon ic-gray">08</div>
+            <div class="ctitle">
+                <h3>التاريخ العائلي</h3>
+                <p>Family Medical History</p>
+            </div>
+        </div>
+        <div class="card-body">
+            <label class="flabel">الأمراض الوراثية والمنتشرة في العائلة</label>
+            <div class="tgrp">
+                <span class="tag t-navy" onclick="toggle(this,'fam')">سكري وراثي</span>
+                <span class="tag t-navy" onclick="toggle(this,'fam')">أمراض القلب الوراثية</span>
+                <span class="tag t-navy" onclick="toggle(this,'fam')">ضغط الدم العائلي</span>
+                <span class="tag t-navy" onclick="toggle(this,'fam')">سرطان وراثي</span>
+                <span class="tag t-navy" onclick="toggle(this,'fam')">فشل كلوي وراثي</span>
+                <span class="tag t-navy" onclick="toggle(this,'fam')">جلطات وراثية</span>
+                <span class="tag t-navy" onclick="toggle(this,'fam')">الزهايمر العائلي</span>
+                <span class="tag t-navy" onclick="toggle(this,'fam')">فقر الدم المنجلي</span>
+                <span class="tag t-navy" onclick="toggle(this,'fam')">اضطرابات التخثر</span>
+            </div>
+            <label class="flabel">تفاصيل التاريخ العائلي</label>
+            <textarea class="notes" id="n-family" placeholder="مثال:&#10;الوالد: مصاب بالسكري والضغط&#10;الأم: توفيت بسبب سرطان الثدي عمر 58&#10;الأخ الأكبر: أجرى عملية قلب مفتوح"></textarea>
+        </div>
+    </div>
+
+    <!-- ── 09 RECENT HISTORY ── -->
+    <div id="recent" class="card">
+        <div class="card-head">
+            <div class="cicon ic-yel">09</div>
+            <div class="ctitle">
+                <h3>التاريخ المرضي الحديث</h3>
+                <p>Recent Medical History</p>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="g2">
+                <div>
+                    <label class="flabel">آخر تنويم في المستشفى</label>
+                    <textarea class="notes" id="n-admission" placeholder="التاريخ، المستشفى، السبب، المدة، خلاصة الحالة..." style="min-height:80px"></textarea>
+                </div>
+                <div>
+                    <label class="flabel">آخر حالة طارئة أو عدوى</label>
+                    <textarea class="notes" id="n-emergency" placeholder="نوع الحالة، كيف عولجت، هل تكررت..." style="min-height:80px"></textarea>
+                </div>
+            </div>
+            <label class="flabel">أحداث طبية حديثة أخرى</label>
+            <textarea class="notes" id="n-recent" placeholder="أي أحداث طبية مهمة في الأشهر الأخيرة (سقوط، إغماء، ألم مستجد...)"></textarea>
+        </div>
+    </div>
+
+    <!-- ── 10 VACCINATIONS ── -->
+    <div id="vaccines" class="card">
+        <div class="card-head">
+            <div class="cicon ic-purple">10</div>
+            <div class="ctitle">
+                <h3>التطعيمات</h3>
+                <p>Vaccinations</p>
+            </div>
+        </div>
+        <div class="card-body">
+            <label class="flabel">التطعيمات المستلمة</label>
+            <div class="tgrp">
+                <span class="tag t-purple" onclick="toggle(this,'vacc')">كوفيد-19</span>
+                <span class="tag t-purple" onclick="toggle(this,'vacc')">الإنفلونزا السنوية</span>
+                <span class="tag t-purple" onclick="toggle(this,'vacc')">الالتهاب الرئوي — Pneumococcal</span>
+                <span class="tag t-purple" onclick="toggle(this,'vacc')">التهاب الكبد B — Hep B</span>
+                <span class="tag t-purple" onclick="toggle(this,'vacc')">التهاب الكبد A — Hep A</span>
+                <span class="tag t-purple" onclick="toggle(this,'vacc')">الكزاز — Tetanus</span>
+                <span class="tag t-purple" onclick="toggle(this,'vacc')">الحصبة MMR</span>
+                <span class="tag t-purple" onclick="toggle(this,'vacc')">جدري الماء — Varicella</span>
+                <span class="tag t-purple" onclick="toggle(this,'vacc')">الحمى الصفراء — Yellow Fever</span>
+                <span class="tag t-purple" onclick="toggle(this,'vacc')">المنينجايتس — Meningococcal</span>
+            </div>
+            <label class="flabel">ملاحظات عن التطعيمات</label>
+            <textarea class="notes" id="n-vacc" placeholder="التطعيمات المستلمة، التواريخ، الجرعات القادمة، الجرعات المفوتة..."></textarea>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         DRUG INTERACTION CHECKER
+    ══════════════════════════════════════════ -->
+    <div id="interaction" class="card-interact">
+        <div class="card-head">
+            <div class="cicon" style="background:rgba(255,255,255,0.22); font-size:16px; font-weight:900; color:white">!</div>
+            <div class="ctitle">
+                <h3>فحص التعارض الدوائي</h3>
+                <p>Drug Interaction Checker — يفحص مقابل أمراض المريض وحساسياته وأدويته الحالية</p>
+            </div>
+        </div>
+        <div class="card-body">
+            <label class="flabel">الدواء المراد وصفه</label>
+            <div class="dinput-row">
+                <input type="text" class="dinput" id="new-drug"
+                    placeholder="اكتب اسم الدواء (عربي أو إنجليزي)..."
+                    onkeydown="if(event.key==='Enter') checkDrug()">
+                <button class="btn btn-y" id="check-btn" onclick="checkDrug()">
+                    فحص التعارض
+                </button>
+            </div>
+            <div id="drug-result" class="alert"></div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         COMMUNICATION SECTION
+    ══════════════════════════════════════════ -->
+    <div id="communication" class="card-comm">
+        <div class="card-head">
+            <div class="cicon" style="background:rgba(255,255,255,0.18); font-size:10px; font-weight:900; color:white">TR</div>
+            <div class="ctitle">
+                <h3>نظام التواصل والترجمة الطبية</h3>
+                <p>Medical Communication — ترجمة المصطلحات الطبية وشرحها للمريض بلغة بسيطة</p>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="comm-grid">
+                <div style="display:flex;flex-direction:column;gap:9px">
+                    <div>
+                        <label class="flabel">المصطلح الطبي (عربي أو إنجليزي)</label>
+                        <textarea class="notes" id="med-term"
+                            placeholder="مثال:&#10;Hypertension&#10;أو: الفشل الكلوي المزمن&#10;أو: Metformin 500mg&#10;أو: Atrial Fibrillation"
+                            style="min-height:100px"></textarea>
+                    </div>
+                    <button class="btn btn-p" id="trans-btn" onclick="translateMed()" style="align-self:flex-start">
+                        شرح للمريض بالعربية
+                    </button>
+                </div>
+                <div>
+                    <label class="flabel">الشرح البسيط للمريض</label>
+                    <div class="comm-out" id="comm-out">
+                        <span class="ph">سيظهر الشرح هنا بعد الضغط على الزر...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="height:50px"></div>
+</main>
+
+<script>
+    /* ──────────────────────────────────────────
+       CONFIGURATION
+    ────────────────────────────────────────── */
+    const MODEL    = "nuha-2.0";
+
+    /* ──────────────────────────────────────────
+       TAG SELECTION STATE
+    ────────────────────────────────────────── */
+    const sel = {
+        chronic: [], surg: [], allergy: [],
+        meds: [], labs: [], fam: [], vacc: []
+    };
+
+    function toggle(el, cat) {
+        el.classList.toggle('on');
+        const txt = el.textContent.trim();
+        if (!sel[cat]) sel[cat] = [];
+        if (el.classList.contains('on')) {
+            if (!sel[cat].includes(txt)) sel[cat].push(txt);
+        } else {
+            sel[cat] = sel[cat].filter(t => t !== txt);
+        }
+    }
+
+    /* ──────────────────────────────────────────
+       NAVIGATION
+    ────────────────────────────────────────── */
+    function go(id, btn) {
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        if (btn) btn.classList.add('active');
+    }
+
+    /* ──────────────────────────────────────────
+       HEADER SYNC
+    ────────────────────────────────────────── */
+    function syncHeader() {
+        const name = document.getElementById('pt-name').value;
+        const mrn  = document.getElementById('pt-mrn').value;
+        const age  = document.getElementById('pt-age').value;
+        const wt   = document.getElementById('pt-wt').value;
+        document.getElementById('hdr-name').textContent = name  || '—';
+        document.getElementById('hdr-mrn').textContent  = mrn   || '—';
+        document.getElementById('hdr-age').textContent  = age  ? age + ' سنة' : '—';
+        document.getElementById('hdr-wt').textContent   = wt   ? wt  + ' كغ'  : '—';
+    }
+
+    /* ──────────────────────────────────────────
+       AI CALL
+    ────────────────────────────────────────── */
+    async function callAI(prompt) {
+        const res = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                model: MODEL,
+                messages: [{ role: 'user', content: prompt }],
+                stream: false
+            })
+        });
+        if (!res.ok) throw new Error(`API Error ${res.status}`);
+        const data = await res.json();
+        return data.choices[0].message.content;
+    }
+
+    /* ──────────────────────────────────────────
+       DRUG INTERACTION CHECK
+    ────────────────────────────────────────── */
+    async function checkDrug() {
+        const drug = document.getElementById('new-drug').value.trim();
+        if (!drug) {
+            showAlert('يرجى إدخال اسم الدواء أولاً.', null);
+            return;
+        }
+
+        const chronicInfo = [...(sel.chronic || []), document.getElementById('n-chronic').value]
+            .filter(Boolean).join('، ') || 'لا يوجد';
+        const allergyInfo = [...(sel.allergy || []), document.getElementById('n-allergy').value]
+            .filter(Boolean).join('، ') || 'لا يوجد';
+        const medsInfo    = [...(sel.meds    || []), document.getElementById('n-meds').value]
+            .filter(Boolean).join('، ') || 'لا يوجد';
+
+        const btn = document.getElementById('check-btn');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spin"></span> جاري الفحص...';
+
+        const box = document.getElementById('drug-result');
+        box.className = 'alert';
+        box.innerHTML = '';
+
+        const prompt =
+`أنت طبيب متخصص في الصيدلة السريرية والتفاعلات الدوائية.
+
+معلومات المريض:
+- الأمراض المزمنة: ${chronicInfo}
+- الحساسيات: ${allergyInfo}
+- الأدوية الحالية: ${medsInfo}
+
+الدواء الجديد المراد وصفه: "${drug}"
+
+السؤال: هل يوجد أي تعارض طبي، موانع استخدام، أو تحذيرات بين "${drug}" وأي مما سبق؟
+
+أجب بالعربية وابدأ بكلمة واحدة:
+- "تحذير:" إذا كان هناك تعارض خطير أو مانع استخدام
+- "تنبيه:" إذا كان هناك احتياط أو تعارض محتمل
+- "آمن:" إذا كان الدواء آمناً
+
+ثم اشرح بإيجاز (3-4 جمل).`;
+
+        try {
+            const result = await callAI(prompt);
+            // نعتمد فقط على الكلمة الأولى التي طلبنا من الـ AI أن يبدأ بها
+            const isConflict = /^(تحذير|تنبيه)/i.test(result.trim());
+            showAlert(result, isConflict, drug);
+        } catch (e) {
+            showAlert('تعذّر الاتصال بالنظام. تأكد من الاتصال بالإنترنت وأعد المحاولة.', null);
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = 'فحص التعارض';
+        }
+    }
+
+    /* ──────────────────────────────────────────
+       ALERT SOUNDS (Web Audio API)
+    ────────────────────────────────────────── */
+
+    // نغمة تنبيه: ثلاث نبضات قصيرة مثل أجهزة المستشفى
+    function playConflictSound() {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+            // ثلاث نبضات بنفس التردد — مثل جهاز مراقبة المريض عند التنبيه
+            [0, 0.18].forEach(start => {
+                const osc    = ctx.createOscillator();
+                const gain   = ctx.createGain();
+                // فلتر يجعل الصوت "طبي" وليس حاداً
+                const filter = ctx.createBiquadFilter();
+
+                osc.connect(filter);
+                filter.connect(gain);
+                gain.connect(ctx.destination);
+
+                filter.type            = 'bandpass';
+                filter.frequency.value = 960;
+                filter.Q.value         = 1.8;
+
+                osc.type           = 'square';   // طابع إلكتروني واضح
+                osc.frequency.value = 960;
+
+                const t = ctx.currentTime + start;
+                gain.gain.setValueAtTime(0,    t);
+                gain.gain.linearRampToValueAtTime(0.07, t + 0.008); // attack
+                gain.gain.setValueAtTime(0.07, t + 0.07);           // sustain
+                gain.gain.linearRampToValueAtTime(0,    t + 0.12);  // decay
+
+                osc.start(t);
+                osc.stop(t + 0.13);
+            });
+
+        } catch (e) {}
+    }
+
+    // نغمة أمان: نبضة واحدة هادئة صاعدة
+    function playSafeSound() {
+        try {
+            const ctx  = new (window.AudioContext || window.webkitAudioContext)();
+            const osc  = ctx.createOscillator();
+            const gain = ctx.createGain();
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(660, ctx.currentTime);
+            osc.frequency.linearRampToValueAtTime(880, ctx.currentTime + 0.12);
+
+            gain.gain.setValueAtTime(0,    ctx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.15, ctx.currentTime + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.32);
+
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 0.35);
+        } catch (e) {}
+    }
+
+    function showAlert(text, isConflict, drug) {
+        const box = document.getElementById('drug-result');
+        if (isConflict === null) {
+            // خطأ في الاتصال
+            box.className = 'alert show conflict';
+            box.innerHTML = `<div class="alert-ttl c">تعذّر الاتصال</div>
+                <div class="alert-body c">${text}</div>`;
+        } else if (isConflict) {
+            // يوجد تعارض — برتقالي + صوت تنبيه
+            box.className = 'alert show conflict';
+            box.innerHTML = `<div class="alert-ttl c">تحذير — تعارض محتمل مع: ${drug}</div>
+                <div class="alert-body c">${text}</div>`;
+            playConflictSound();
+        } else {
+            // لا يوجد تعارض — أخضر بدون صوت
+            box.className = 'alert show safe';
+            box.innerHTML = `<div class="alert-ttl s">لا يوجد تعارض — ${drug}</div>
+                <div class="alert-body s">${text}</div>`;
+            playSafeSound();
+        }
+    }
+
+    /* ──────────────────────────────────────────
+       COMMUNICATION / TRANSLATION
+    ────────────────────────────────────────── */
+    async function translateMed() {
+        const term = document.getElementById('med-term').value.trim();
+        if (!term) return;
+
+        const btn = document.getElementById('trans-btn');
+        const out  = document.getElementById('comm-out');
+
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spin"></span> جاري التحليل...';
+        out.innerHTML = '<span class="ph">جاري تحليل المصطلح...</span>';
+
+        const prompt =
+`أنت مساعد طبي متخصص في التواصل الطبي مع المرضى.
+المصطلح: "${term}"
+
+قدّم الآتي باللغة العربية السهلة:
+**الاسم:** اسمه بالعربية أو ترجمته
+**ما هو:** شرح بسيط في جملة أو جملتين يفهمه المريض العادي (بدون مصطلحات طبية معقدة)
+**ماذا يعني لك:** ما الذي يجب أن يعرفه المريض عملياً عن حالته أو دوائه
+**نصيحة:** نصيحة عملية واحدة مختصرة
+
+اجعل الأسلوب بسيطاً ومطمئناً.`;
+
+        try {
+            const result = await callAI(prompt);
+            out.innerHTML = result
+                .replace(/\n/g, '<br>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong style="color:var(--primary)">$1</strong>');
+        } catch (e) {
+            out.innerHTML = '<span style="color:var(--red)">تعذّر الاتصال. تأكد من الاتصال بالإنترنت.</span>';
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = 'شرح للمريض بالعربية';
+        }
+    }
+
+    /* ──────────────────────────────────────────
+       SCROLL SPY (optional active nav tracking)
+    ────────────────────────────────────────── */
+    const sections = [
+        'pt-info','chronic','surgeries','allergies','curr-meds',
+        'med-hist','visits','labs','family','recent','vaccines',
+        'interaction','communication'
+    ];
+
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(id => {
+            const el = document.getElementById(id);
+            if (el && window.scrollY + 90 >= el.offsetTop) current = id;
+        });
+        document.querySelectorAll('.nav-btn').forEach((btn, i) => {
+            btn.classList.toggle('active', i < sections.length && btn.textContent.trim() !== '' &&
+                sections[i] === current);
+        });
+    }, { passive: true });
+</script>
+</body>
+</html>
