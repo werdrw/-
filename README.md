@@ -38,7 +38,11 @@
 
 
 
-### *Tiryaq is the antidote to poison — and our system does exactly that by preventing the "silent errors" that harm patients.*
+
+# (Tiryaq) AI-Powered Clinical Decision Support System
+
+
+### *Tiryaq is the antidote to poison, and our system does exactly that by preventing the "silent errors" that harm patients.*
 
 ## About the Project
 In today's fast-paced healthcare environment, medical decisions are not built on visible diagnosis alone, but on a complex network of critical details. This system aims to give physicians a panoramic view at the moment of decision-making, ensuring no critical information is missed — such as an undetected allergy or a silent drug interaction — under the pressure of work.
