@@ -36,6 +36,7 @@
 
 *هذا المشروع هو خطوة نحو رعاية صحية أكثر أماناً، حيث تكون التكنولوجيا هي العين التي لا تغفل عن التفاصيل. لأن التفاصيل الصغيرة تنقذ أرواحاً.*
 
+
 ---
 
 
@@ -46,7 +47,7 @@
 ### *Tiryaq is the antidote to poison, and our system does exactly that by preventing the "silent errors" that harm patients.*
 
 ## About the Project
-In today's fast-paced healthcare environment, medical decisions are not built on visible diagnosis alone, but on a complex network of critical details. This system aims to give physicians a panoramic view at the moment of decision-making, ensuring no critical information is missed — such as an undetected allergy or a silent drug interaction — under the pressure of work.
+In today's fast-paced healthcare environment, medical decisions are not built on visible diagnosis alone, but on a complex network of critical details. This system aims to give physicians a panoramic view at the moment of decision-making, ensuring no critical information is missed such as an undetected allergy or a silent drug interaction under the pressure of work.
 
 ## The Problem
 Medical staff face daily challenges that can lead to serious risks:
@@ -76,5 +77,5 @@ The system acts as an "intelligent assistant" that scans and analyzes patient da
 2. The system scans the patient's medical background in the database.
 3. If a conflict is detected (e.g., a medication unsuitable for a hypertensive patient, or an allergy to a specific compound), an immediate audio and visual alert is triggered explaining the reason for the conflict.
 
----
-*This project is a step toward safer healthcare, where technology becomes the eye that never overlooks the details — because small details save lives.*
+
+*This project is a step toward safer healthcare, where technology becomes the eye that never overlooks the details, because small details save lives.*
